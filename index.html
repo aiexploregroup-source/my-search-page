@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Responsive Dynamic Background Webpage</title>
+    <!-- Link to the responsive stylesheet -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Main container for the full-screen background image -->
+    <div id="backgroundContainer" class="full-screen-background">
+        
+        <!-- ADJUSTABLE SIZE CONTROL PANEL (Sits above the search bar) -->
+        <div class="ui-panel">
+            <div class="control-container">
+                <label for="sizeSlider">Zoom Level:</label>
+                <input type="range" id="sizeSlider" min="100" max="250" value="100" step="5">
+                <!-- Button toggles between 'cover' and 'contain' modes -->
+                <button id="toggleFitBtn" onclick="toggleCoverContain()">Toggle Fit (Cover/Contain)</button>
+            </div>
+        </div>
+        
+        <!-- Google Search Form Section -->
+        <form action="https://www.google.com/search" method="get" target="_blank" class="search-form">
+            <input 
+                type="text" 
+                name="q" 
+                class="search-input" 
+                placeholder="Search Google..." 
+            />
+            <button class="search-button" type="submit">
+                <!-- Pure CSS Magnifying Glass Icon -->
+                <span class="search-icon"></span>
+            </button>
+        </form>
+        <!-- End Search Form Section -->
+
+    </div>
+
+    <script>
+        // State management for the background sizing mode
+        let currentMode = 0; // 0 = cover (default), 1 = contain, 2 = manual zoom
+
+        const backgroundContainer = document.getElementById('backgroundContainer');
+        const sizeSlider = document.getElementById('sizeSlider');
+        const toggleFitBtn = document.getElementById('toggleFitBtn');
+
+        /**
+         * Applies the zoom value from the slider to the background.
+         */
+        function updateZoom() {
+            const zoomValue = sizeSlider.value;
+            if (currentMode === 2) {
+                backgroundContainer.style.backgroundSize = `${zoomValue}%`;
+            }
+        }
+
+        /**
+         * Toggles between 'cover' and 'contain' presets, resetting zoom.
+         */
+        function toggleCoverContain() {
+            if (currentMode === 0) {
+                // Change to 'contain' mode
+                backgroundContainer.style.backgroundSize = 'contain';
+                currentMode = 1;
+                toggleFitBtn.textContent = 'Toggle Fit (Contain)';
+            } else {
+                // Change to 'cover' mode (default)
+                backgroundContainer.style.backgroundSize = 'cover';
+                sizeSlider.value = 100; // Reset slider value
+                currentMode = 0;
+                toggleFitBtn.textContent = 'Toggle Fit (Cover)';
+            }
+            backgroundContainer.style.backgroundRepeat = 'no-repeat';
+        }
+
+        // Event listener: when the user touches the slider, switch to manual zoom mode
+        sizeSlider.addEventListener('input', () => {
+            currentMode = 2; // Set mode to manual zoom
+            updateZoom();
+            toggleFitBtn.textContent = `Zoom: ${sizeSlider.value}%`;
+            backgroundContainer.style.backgroundRepeat = 'no-repeat';
+        });
+
+        // Set initial state on load
+        backgroundContainer.style.backgroundSize = 'cover';
+        toggleFitBtn.textContent = 'Toggle Fit (Cover)';
+
+    </script>
+</body>
+</html>
